@@ -1,30 +1,44 @@
-<%@ page language="java" import="java.util.*,top.jiumu.user.domain.User" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+package top.jiumu.user.web.servlet;
 
+import java.io.IOException;
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>My JSP 'welcome.jsp' starting page</title>
-    
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-  </head>
-  <%
-  	User user = (User) request.getSession().getAttribute("user");
-  	if(user==null||user.getUsername()==null||user.getUsername().trim().isEmpty()||user.getPassword()==null||user.getPassword().trim().isEmpty()){
-  		request.setAttribute("msg","请登录后进入主页!");
-  		request.getRequestDispatcher("/user/login.jsp").forward(request, response);
-  	}
-  %>
-  <body>
-	欢迎欢迎,热烈欢迎<a style="color:red;font-size:36">${user.username }</a>领导登录!!!
-  </body>
-</html>
+import cn.itcast.commons.CommonUtils;
+
+import top.jiumu.user.domain.User;
+import top.jiumu.user.service.UserException;
+import top.jiumu.user.service.UserService;
+
+public class LoginServlet extends HttpServlet {
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		
+		// 依赖UserService
+		UserService userService = new UserService();
+		
+		/*
+		 * 1. 封装表单数据到User form中
+		 * 2. 调用service的login()方法，得到返回的User user对象。
+		 *   > 如果抛出异常：获取异常信息，保存到request域，再保存form，转发到login.jsp
+		 *   > 如果没有异常：保存返回值到session中，重定向到welcome.jsp
+		 */
+		User form = CommonUtils.toBean(request.getParameterMap(), User.class);
+		try {
+			User user = userService.login(form);
+			request.getSession().setAttribute("user", user);
+			response.sendRedirect(request.getContextPath() + "/user/welcome.jsp");
+		} catch(UserException e) {
+			request.setAttribute("msg", e.getMessage());
+			request.setAttribute("user", form);
+			request.getRequestDispatcher("/user/login.jsp").forward(request, response);
+		}
+	}
+
+}
