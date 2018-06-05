@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<users>
+	<user username="张老三" password="laosan"/>
+	<user username="李小四" password="xiaosi"/>
+	<user username="王小五" password="xiaowu"/>
+	<user username="赵小六" password="xiaoliu"/>
+	<user username="牛小七" password="xiaoqi"/>
+	<user username="葛优躺" password="geyou"/>
+</users>
