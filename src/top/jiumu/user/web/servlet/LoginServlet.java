@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
 				request.getRequestDispatcher("/user/login.jsp").forward(request, response);
 				return;
 			}else{
-				request.getSession().setAttribute("user", form);
+				request.getSession().setAttribute("_user", form);
 				//request.getRequestDispatcher("/user/welcome.jsp").forward(request, response);
 				response.sendRedirect(request.getContextPath()+"/user/welcome.jsp");
 			}
