@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
 public class UserDao {
-	private String path = "C:\\Users\\jiumu\\Documents\\MyEclipse\\day14_1\\users.xml";
+	private String path = "day14_1\\users.xml";
 
 	/**
 	 * 通过用户名查询
